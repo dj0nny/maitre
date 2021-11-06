@@ -6,10 +6,11 @@ export default {
     menuList: [],
     errors: false,
     successMsg: false,
-    isLoading: false,
+    isLoading: null,
   },
   actions: {
     async fetchMenuList({ state }) {
+      state.errors = false;
       state.isLoading = true;
       try {
         const { data: menus, error } = await supabase.from('menus').select('*');
@@ -21,6 +22,7 @@ export default {
       state.isLoading = false;
     },
     async addMenu({ state }, payload) {
+      state.errors = false;
       state.isLoading = true;
       try {
         // console.log('dispatched with', payload);
@@ -31,7 +33,6 @@ export default {
           },
         ]);
         if (error) throw error;
-        state.successMsg = 'Menu Created!';
       } catch (error) {
         console.log(error.message);
         state.errors = error.message;

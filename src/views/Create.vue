@@ -3,7 +3,7 @@
     <div class="row d-flex justify-content-center">
       <div class="col-10">
         <div v-if="successMsg" class="alert alert-success">
-          {{ successMsg }}
+            Menu created!
         </div>
         <div v-if="errors" class="alert alert-danger">
           {{ errors }}
@@ -36,22 +36,28 @@ export default {
     const menuName = ref(null);
     const menuDescription = ref(null);
     const blankInputError = ref(null);
+    const successMsg = ref(null);
     const store = useStore();
 
     const isLoading = computed(() => store.state.menu.isLoading);
     const errors = computed(() => store.state.menu.errors);
-    const successMsg = computed(() => store.state.menu.successMsg);
 
-    const addMenuSubmit = async () => {
+    const addMenuSubmit = () => {
       if (blankInputError.value !== null) blankInputError.value = null;
       if (menuName.value === '' || menuName.value === null) {
         blankInputError.value = true;
         return;
       }
 
-      await store.dispatch('menu/addMenu', { menuName: menuName.value, menuDescription: menuDescription.value });
+      store.dispatch('menu/addMenu', { menuName: menuName.value, menuDescription: menuDescription.value });
       menuName.value = null;
       menuDescription.value = null;
+      if (!errors.value) {
+        successMsg.value = true;
+      }
+      setTimeout(() => {
+        successMsg.value = null;
+      }, 2500);
     };
 
     return {
