@@ -1,0 +1,41 @@
+:root {
+  --main: #000;
+  --error: red;
+}
+
+textarea {
+  resize: none;
+  height: 100px;
+}
+
+ul.menu {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  width: 100%;
+  text-align: center;
+}
+
+ul.menu li.menu-item {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+ul.menu li.menu-item a {
+  color: var(--main);
+  text-decoration: none;
+  font-size: 20px;
+}
+
+ul.menu li.menu-item a:hover,
+ul.menu li.menu-item a.router-link-exact-active {
+  text-decoration: underline;
+}
+
+.menu-card-item {
+  min-height: 150px;
+}
+
+.input-error {
+  border-bottom: 1px solid var(--error);
+}
