@@ -33,8 +33,8 @@ import { useStore } from 'vuex';
 export default {
   name: 'Create',
   setup() {
-    const menuName = ref(null);
-    const menuDescription = ref(null);
+    const menuName = ref('');
+    const menuDescription = ref('');
     const blankInputError = ref(null);
     const successMsg = ref(null);
     const store = useStore();
@@ -44,17 +44,17 @@ export default {
 
     const addMenuSubmit = () => {
       if (blankInputError.value !== null) blankInputError.value = null;
-      if (menuName.value === '' || menuName.value === null) {
+      if (menuName.value === '' || menuName.value === '') {
         blankInputError.value = true;
         return;
       }
 
-      store.dispatch('menu/addMenu', { menuName: menuName.value, menuDescription: menuDescription.value });
-      menuName.value = null;
-      menuDescription.value = null;
-      if (!errors.value) {
+      store.dispatch('menu/addMenu', { menuName: menuName.value, menuDescription: menuDescription.value }).then(() => {
+        menuName.value = '';
+        menuDescription.value = '';
         successMsg.value = true;
-      }
+      });
+
       setTimeout(() => {
         successMsg.value = null;
       }, 2500);

@@ -10,17 +10,17 @@
             <li class="menu-item">
               <router-link :to="{ name: 'Home' }">Home</router-link>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" v-if="user">
               <router-link :to="{ name: 'Create' }">Create</router-link>
             </li>
-            <li class="menu-item">
-              <router-link :to="{ name: '' }">Login</router-link>
+            <li class="menu-item" v-if="!user">
+              <router-link :to="{ name: 'Login' }">Login</router-link>
             </li>
-            <li class="menu-item">
-              <router-link :to="{ name: '' }">Register</router-link>
+            <li class="menu-item" v-if="!user">
+              <router-link :to="{ name: 'Register' }">Register</router-link>
             </li>
-            <li class="menu-item">
-              <router-link :to="{ name: '' }">Logout</router-link>
+            <li class="menu-item" v-if="user">
+              <a href="#" @click="logout">Logout</a>
             </li>
           </ul>
         </div>
@@ -30,7 +30,22 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import supabase from '../supabase';
+
 export default {
   name: 'Navigation',
+  setup() {
+    const store = useStore();
+
+    const user = computed(() => store.state.auth.user);
+
+    const logout = async () => {
+      await supabase.auth.signOut();
+    };
+
+    return { user, logout };
+  },
 };
 </script>

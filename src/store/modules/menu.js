@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import supabase from '../../supabase';
 
 export default {
@@ -31,27 +32,29 @@ export default {
       }
       commit('setLoading', false);
     },
-    async addMenu({ commit }, payload) {
-      commit('setErrors', false);
+    addMenu({ commit }, payload) {
+      commit('setError', false);
       commit('setLoading', true);
-      try {
-        // console.log('dispatched with', payload);
-        const { error } = await supabase.from('menus').insert([
-          {
-            menuName: payload.menuName,
-            menuDescription: payload.menuDescription,
-          },
-        ]);
-        if (error) throw error;
-      } catch (error) {
-        // console.log(error.message);
-        commit('setErrors', error.message);
-      }
-      commit('setLoading', false);
+
+      return new Promise((resolve, reject) => {
+        supabase.from('menus').insert({
+          menuName: payload.menuName,
+          menuDescription: payload.menuDescription,
+        }).then((item) => {
+          if (item.error) {
+            commit('setError', item.error.message);
+            commit('setLoading', false);
+            reject(item.error);
+          }
+          commit('setLoading', false);
+          resolve(item.data);
+        });
+      });
     },
     async deleteMenu({ commit, state }, payload) {
       commit('setErrors', false);
       commit('setLoading', true);
+
       try {
         const { error } = await supabase.from('menus').delete().eq('id', payload);
         if (error) throw error;
