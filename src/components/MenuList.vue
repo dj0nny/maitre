@@ -14,9 +14,15 @@
               {{ menu.menuName }}
             </div>
             <router-link class="btn btn-outline-primary mt-3" :to="{ name: '' }">Discover</router-link>
+            <button @click="deleteMenu(menu.id)" type="button" class="btn btn-outline-danger ms-2 mt-3">Delete</button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div v-else class="d-flex justify-content-center mt-5">
+    <div class="spinner-border" style="width: 3.5em; height: 3.5rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 </template>
@@ -36,7 +42,13 @@ export default {
 
     store.dispatch('menu/fetchMenuList');
 
-    return { menuList, errors, isLoading };
+    const deleteMenu = (id) => {
+      store.dispatch('menu/deleteMenu', id);
+    };
+
+    return {
+      menuList, errors, isLoading, deleteMenu,
+    };
   },
 };
 </script>

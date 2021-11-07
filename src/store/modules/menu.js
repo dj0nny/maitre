@@ -5,25 +5,35 @@ export default {
   state: {
     menuList: [],
     errors: false,
-    successMsg: false,
     isLoading: null,
   },
+  mutations: {
+    setError(state, payload) {
+      state.errors = payload;
+    },
+    setLoading(state, payload) {
+      state.isLoading = payload;
+    },
+    setMenuList(state, payload) {
+      state.menuList = payload;
+    },
+  },
   actions: {
-    async fetchMenuList({ state }) {
-      state.errors = false;
-      state.isLoading = true;
+    async fetchMenuList({ commit }) {
+      commit('setError', false);
+      commit('setLoading', true);
       try {
         const { data: menus, error } = await supabase.from('menus').select('*');
         if (error) throw error;
-        state.menuList = menus;
+        commit('setMenuList', menus);
       } catch (error) {
-        state.errors = error.message;
+        commit('setError', error.message);
       }
-      state.isLoading = false;
+      commit('setLoading', false);
     },
-    async addMenu({ state }, payload) {
-      state.errors = false;
-      state.isLoading = true;
+    async addMenu({ commit }, payload) {
+      commit('setErrors', false);
+      commit('setLoading', true);
       try {
         // console.log('dispatched with', payload);
         const { error } = await supabase.from('menus').insert([
@@ -34,10 +44,24 @@ export default {
         ]);
         if (error) throw error;
       } catch (error) {
-        console.log(error.message);
-        state.errors = error.message;
+        // console.log(error.message);
+        commit('setErrors', error.message);
       }
-      state.isLoading = false;
+      commit('setLoading', false);
+    },
+    async deleteMenu({ commit, state }, payload) {
+      commit('setErrors', false);
+      commit('setLoading', true);
+      try {
+        const { error } = await supabase.from('menus').delete().eq('id', payload);
+        if (error) throw error;
+      } catch (error) {
+        commit('setErrors', error.message);
+      }
+      const list = [...state.menuList];
+      const filteredList = list.filter((menuItem) => menuItem.id !== payload);
+      commit('setMenuList', filteredList);
+      commit('setLoading', false);
     },
   },
 };
