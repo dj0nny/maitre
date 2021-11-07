@@ -1,24 +1,60 @@
 # maitre
 
-## Project setup
-```
-npm install
+Menus management app built with Vue 3 and Supabase.io 
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`VUE_APP_SUPABASE_URL`
+
+`VUE_APP_SUPABASE_ANON_KEY`
+
+For more info see the links below:
+
+https://supabase.io/docs/guides/api#api-url-and-keys
+https://supabase.io/docs/guides/api#using-the-api
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/dj0nny/maitre.git
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+Go to the project directory
+
+```bash
+  cd maitre
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+Install dependencies
+
+```bash
+  npm install
 ```
 
-### Lints and fixes files
-```
-npm run lint
+Start the server
+
+```bash
+  npm run serve
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Demo
+
+Coming soon...😄
+
+
+## Tech Stack
+
+**Client:** Vue 3, Vuex, Bootstrap 5
+
+**Server:** Supabase.io
+
+
+## Authors
+
+- [@dj0nny](https://github.com/dj0nny)
+
