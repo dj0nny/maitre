@@ -12,8 +12,7 @@ To run this project, you will need to add the following environment variables to
 
 For more info see the links below:
 
-https://supabase.io/docs/guides/api#api-url-and-keys
-https://supabase.io/docs/guides/api#using-the-api
+https://supabase.io/docs/guides/api#api-url-and-keys<br> https://supabase.io/docs/guides/api#using-the-api
 
 ## Run Locally
 
