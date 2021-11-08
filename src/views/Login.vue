@@ -2,6 +2,9 @@
   <div class="login mt-5">
     <div class="row d-flex justify-content-center">
       <div class="col-8">
+        <div v-if="errors" class="alert alert-danger">
+          {{ errors }}
+        </div>
         <div class="no-account mb-3">
           Don't have an account? <router-link :to="{ name: 'Register' }">Register here</router-link>
         </div>
@@ -23,25 +26,40 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'Login',
   setup() {
+    const store = useStore();
+    const router = useRouter();
+
     const email = ref('');
     const password = ref('');
     const blankInputError = ref(null);
+
+    const errors = computed(() => store.state.auth.errors);
 
     const fireLogin = () => {
       if (email.value === '' || password.value === '') {
         blankInputError.value = true;
         return;
       }
-      console.log(email.value, password.value);
+
+      store.dispatch('auth/loginUser', { email: email.value, password: password.value }).then(() => {
+        email.value = '';
+        password.value = '';
+        router.push({ name: 'Home' });
+      }).catch(() => {
+        email.value = '';
+        password.value = '';
+      });
     };
 
     return {
-      email, password, blankInputError, fireLogin,
+      email, password, blankInputError, fireLogin, errors,
     };
   },
 };

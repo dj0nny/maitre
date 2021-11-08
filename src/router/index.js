@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-// import supabase from '../supabase';
+import supabase from '../supabase';
 import Home from '../views/Home.vue';
 
 const routes = [
@@ -39,6 +39,15 @@ const routes = [
       auth: false,
     },
   },
+  {
+    path: '/details/:menuId',
+    name: 'MenuDetails',
+    component: () => import('../views/MenuDetails.vue'),
+    meta: {
+      title: 'Menu Details',
+      auth: true,
+    },
+  },
 ];
 
 const router = createRouter({
@@ -53,17 +62,17 @@ router.beforeEach((to, from, next) => {
 });
 
 /* eslint-disable no-unused-vars */
-// router.beforeEach((to, from, next) => {
-//   const user = supabase.auth.user();
-//   if (to.matched.some((res) => res.meta.auth)) {
-//     if (user) {
-//       next();
-//       return;
-//     }
-//     next({ name: 'Login' });
-//     return;
-//   }
-//   next();
-// });
+router.beforeEach((to, from, next) => {
+  const user = supabase.auth.user();
+  if (to.matched.some((res) => res.meta.auth)) {
+    if (user) {
+      next();
+      return;
+    }
+    next({ name: 'Login' });
+    return;
+  }
+  next();
+});
 
 export default router;

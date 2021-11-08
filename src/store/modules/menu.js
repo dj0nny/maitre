@@ -1,10 +1,10 @@
-/* eslint-disable no-unused-vars */
 import supabase from '../../supabase';
 
 export default {
   namespaced: true,
   state: {
     menuList: [],
+    singleMenu: [],
     errors: false,
     isLoading: null,
   },
@@ -17,6 +17,9 @@ export default {
     },
     setMenuList(state, payload) {
       state.menuList = payload;
+    },
+    setMenu(state, payload) {
+      state.singleMenu = payload;
     },
   },
   actions: {
@@ -52,18 +55,36 @@ export default {
       });
     },
     async deleteMenu({ commit, state }, payload) {
-      commit('setErrors', false);
+      commit('setError', false);
+      commit('setLoading', true);
+
+      return new Promise((resolve, reject) => {
+        supabase.from('menus').delete().eq('id', payload.menuId).then((menu) => {
+          if (menu.error) {
+            commit('setError', menu.error.message);
+            commit('setLoading', false);
+            reject(menu.error);
+          }
+          const list = [...state.menuList];
+          const filteredList = list.filter((menuItem) => menuItem.id !== payload);
+          commit('setMenuList', filteredList);
+          commit('setLoading', false);
+          resolve(menu);
+        });
+      });
+    },
+    async getMenu({ commit }, payload) {
+      commit('setError', false);
       commit('setLoading', true);
 
       try {
-        const { error } = await supabase.from('menus').delete().eq('id', payload);
+        const { data: menu, error } = await supabase.from('menus').select('*').eq('id', payload.menuId);
         if (error) throw error;
+        commit('setMenu', menu[0]);
       } catch (error) {
-        commit('setErrors', error.message);
+        commit('setError', error.message);
       }
-      const list = [...state.menuList];
-      const filteredList = list.filter((menuItem) => menuItem.id !== payload);
-      commit('setMenuList', filteredList);
+
       commit('setLoading', false);
     },
   },

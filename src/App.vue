@@ -20,7 +20,7 @@ export default {
     const store = useStore();
 
     supabase.auth.onAuthStateChange((_, session) => {
-      console.log('session', session);
+      // console.log('session', session);
       store.dispatch('auth/checkUser', session);
     });
   },

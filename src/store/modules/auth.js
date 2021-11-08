@@ -33,13 +33,34 @@ export default {
           email: payload.email,
           password: payload.password,
         }).then((user) => {
-          console.log('resolve', user);
-          commit('setUser', user);
+          // console.log('resolve', user);
           if (user.error) {
             commit('setError', user.error.message);
             commit('setLoading', false);
             reject(user.error);
           }
+          commit('setUser', user);
+          commit('setLoading', false);
+          resolve(user);
+        });
+      });
+    },
+    loginUser({ commit }, payload) {
+      commit('setError', false);
+      commit('setLoading', true);
+
+      return new Promise((resolve, reject) => {
+        supabase.auth.signIn({
+          email: payload.email,
+          password: payload.password,
+        }).then((user) => {
+          console.log(user);
+          if (user.error) {
+            commit('setError', user.error.message);
+            commit('setLoading', false);
+            reject(user.error);
+          }
+          commit('setUser', user);
           commit('setLoading', false);
           resolve(user);
         });
