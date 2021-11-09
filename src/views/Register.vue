@@ -48,7 +48,8 @@ export default {
         blankInputError.value = true;
         return;
       }
-      // console.log(email.value, password.value);
+
+      blankInputError.value = false;
 
       store.dispatch('auth/registerUser', { email: email.value, password: password.value }).then(() => {
         email.value = '';

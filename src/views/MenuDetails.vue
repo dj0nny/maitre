@@ -2,6 +2,9 @@
   <div class="menu-details mt-5" v-if="!isLoading">
     <div class="row d-flex justify-content-center">
       <div class="col-10">
+        <div v-if="successMsg" class="alert alert-success">
+            Dish deleted!
+        </div>
         <div class="h1">{{ singleMenu.menuName }}</div>
         <div class="menu-description my-3" v-if="singleMenu.menuDescription">
           {{ singleMenu.menuDescription }}
@@ -10,9 +13,10 @@
           <div class="h3">Dishes</div>
           <div v-if="dishesList.length > 0" class="dishes-list">
             <ul class="list-group">
-              <li class="list-group-item mt-2" v-for="dish in dishesList" :key="dish.id">
+              <li class="list-group-item position-relative mt-2" v-for="dish in dishesList" :key="dish.id">
                 {{ dish.name }} <br>
                 <div class="fst-italic">{{ dish.ingredients }}</div>
+                <button type="button" @click="deleteDish(dish.id)" class="btn-close position-absolute top-0 end-0 p-3" aria-label="Close"></button>
               </li>
             </ul>
           </div>
@@ -20,7 +24,7 @@
             The dishes list is empty 😅
           </div>
         </div>
-        <div class="menu-actions mt-3">
+        <div class="menu-actions mt-3 mb-4">
           <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addDishModal">Add dish</button>
           <button @click="deleteMenu" type="button" class="btn btn-outline-danger ms-3">Delete menu</button>
         </div>
@@ -46,7 +50,7 @@
               </div>
               <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Add dish</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Add dish</button>
               </div>
             </form>
           </div>
@@ -84,28 +88,50 @@ export default {
     const dishName = ref('');
     const dishIngredients = ref('');
     const blankInputError = ref(false);
+    const successMsg = ref(false);
 
     store.dispatch('menu/getMenu', { menuId });
     store.dispatch('dishes/getDishes', { menuId });
 
     const deleteMenu = () => {
+      if (dishesList.value.length > 0) {
+        store.dispatch('dishes/deleteDishesOfMenu', { menuId }).then(() => {
+          store.dispatch('menu/deleteMenu', { menuId }).then(() => {
+            router.push({ name: 'Home' });
+          });
+        });
+      }
       store.dispatch('menu/deleteMenu', { menuId }).then(() => {
         router.push({ name: 'Home' });
       });
     };
 
     const addDishToMenu = () => {
-      console.log(dishName.value, dishIngredients.value);
-
       if (dishName.value === '' || dishIngredients.value === '') {
         blankInputError.value = true;
         return;
       }
-      console.log('aa');
+
+      blankInputError.value = false;
+
+      store.dispatch('dishes/addDish', { dishName: dishName.value, dishIngredients: dishIngredients.value, menuId }).then(() => {
+        dishName.value = '';
+        dishIngredients.value = '';
+      });
+    };
+
+    const deleteDish = (id) => {
+      store.dispatch('dishes/deleteDish', { dishId: id }).then(() => {
+        successMsg.value = true;
+
+        setTimeout(() => {
+          successMsg.value = false;
+        }, 2500);
+      });
     };
 
     return {
-      isLoading, singleMenu, deleteMenu, menuId, dishName, dishIngredients, addDishToMenu, blankInputError, dishesList,
+      isLoading, singleMenu, deleteMenu, menuId, dishName, dishIngredients, addDishToMenu, blankInputError, dishesList, deleteDish, successMsg,
     };
   },
 };

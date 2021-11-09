@@ -48,6 +48,8 @@ export default {
         return;
       }
 
+      blankInputError.value = false;
+
       store.dispatch('auth/loginUser', { email: email.value, password: password.value }).then(() => {
         email.value = '';
         password.value = '';

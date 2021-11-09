@@ -49,6 +49,8 @@ export default {
         return;
       }
 
+      blankInputError.value = false;
+
       store.dispatch('menu/addMenu', { menuName: menuName.value, menuDescription: menuDescription.value }).then(() => {
         menuName.value = '';
         menuDescription.value = '';
