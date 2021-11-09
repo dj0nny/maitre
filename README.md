@@ -43,7 +43,7 @@ Start the server
 
 ## Demo
 
-Coming soon...😄
+You can see the demo [here](https://agitated-poincare-9247fc.netlify.app/#/)
 
 
 ## Tech Stack
