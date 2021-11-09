@@ -10,16 +10,16 @@
             <li class="menu-item">
               <router-link :to="{ name: 'Home' }">Home</router-link>
             </li>
-            <li class="menu-item" v-if="user">
+            <li class="menu-item" v-if="user.data">
               <router-link :to="{ name: 'Create' }">Create</router-link>
             </li>
-            <li class="menu-item" v-if="!user">
+            <li class="menu-item" v-if="!user.data">
               <router-link :to="{ name: 'Login' }">Login</router-link>
             </li>
-            <li class="menu-item" v-if="!user">
+            <li class="menu-item" v-if="!user.data">
               <router-link :to="{ name: 'Register' }">Register</router-link>
             </li>
-            <li class="menu-item" v-if="user">
+            <li class="menu-item" v-if="user.data">
               <a href="#" @click="logout">Logout</a>
             </li>
           </ul>

@@ -3,7 +3,7 @@ import supabase from '../../supabase';
 export default {
   namespaced: true,
   state: {
-    user: null,
+    user: {},
     errors: null,
     isLoading: null,
   },
